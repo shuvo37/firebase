@@ -1,0 +1,10 @@
+Future<List<String>>fetchData() async{
+
+    QuerySnapshot querySnapshot=
+    await FirebaseFirestore.instance.collection('Countries').get();
+         List<String>countries=
+         querySnapshot.docs.map((doc) =>doc['name'].toString()).toList();
+
+      return countries;
+
+  }
