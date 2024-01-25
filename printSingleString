@@ -1,45 +1,21 @@
- child:FutureBuilder<String>(
-
-         future:fetchData(),
-         builder:(context,snapshot){
-
-          if(snapshot.connectionState==ConnectionState.waiting)
-            {
-            return CircularProgressIndicator();
+ child: FutureBuilder<String>(
+          future: fetchData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return Text('No data available');
+            } else {
+              return ListView.builder(
+                itemCount: 1, // Since you're displaying a single string
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(snapshot.data!),
+                  );
+                },
+              );
             }
-          else if(snapshot.hasError)
-            {
-              return Text('Error:${snapshot.error}');
-
-            }
-          else if(!snapshot.hasData||snapshot.data==null)
-            {
-
-           return Text('NO data');
-
-            }
-          else{
-
-            return ListView.builder(
-
-              itemCount:1,
-              itemBuilder: (context,index){
-
-                return ListTile(
-                  title:Text(snapshot.data!),
-
-                );
-
-              },
-
-            );
-
-
-          }
-
-
-         },
-
-
-
+          },
         ),
