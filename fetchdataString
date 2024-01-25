@@ -1,0 +1,65 @@
+class _MyHomePageState extends State<MyHomePage> {
+
+
+  String yourData = "";
+
+  Future<String> fetchData() async {
+    try {
+      // Get a reference to the collection
+      CollectionReference dataCollection =
+      FirebaseFirestore.instance.collection('info');
+
+      // Get the document snapshot
+      DocumentSnapshot documentSnapshot = await dataCollection.doc('1').get();
+
+      // Access the data field you want (replace 'your_field_name' with the actual field name)
+      yourData = documentSnapshot.get('name');
+
+      return yourData;
+    } catch (e) {
+      print("Error fetching data: $e");
+      return "f*k u";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("$yourData"), // Default title
+      ),
+      body: Center(
+        child: FutureBuilder<String>(
+          future: fetchData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // If still loading, show CircularProgressIndicator
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              // If there's an error, show an error message
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              // If no data available, show a message
+              return Text('No data available');
+            } else {
+              return ListView.builder(
+
+               itemCount: 1,
+               itemBuilder: (context,index){
+
+                  return ListTile(
+                    title: Text(snapshot.data!),
+
+                  ) ;
+
+               },
+
+              );
+
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
