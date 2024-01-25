@@ -1,0 +1,28 @@
+Future<void> _deleteFromFirestore(String uniqueId) async {
+  try {
+  CollectionReference dataCollection = FirebaseFirestore.instance.collection('user_input');
+
+  // Query for the document with the specified uniqueId
+  QuerySnapshot querySnapshot = await dataCollection.where('uniqueId', isEqualTo: uniqueId).get();
+
+  // Check if the document exists
+  if (querySnapshot.docs.isNotEmpty) {
+  // Delete the first document with the specified uniqueId
+  await dataCollection.doc(querySnapshot.docs.first.id).delete();
+
+  ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+  content: Text('Document deleted from Firestore, Unique ID: $uniqueId'),
+  ),
+  );
+  } else {
+  ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+  content: Text('Document not found in Firestore, Unique ID: $uniqueId'),
+  ),
+  );
+  }
+  } catch (e) {
+  print('Error deleting from Firestore: $e');
+  }
+  }
